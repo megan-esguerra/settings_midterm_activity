@@ -10,12 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
+    return const CupertinoApp(
       debugShowCheckedModeBanner: false,
-      theme: CupertinoThemeData(
-        brightness: Brightness.light, // Default to light mode
-      ),
-      home: const SettingsPage(),
+      home: SettingsPage(),
     );
   }
 }
@@ -31,8 +28,74 @@ class SettingsPage extends StatelessWidget {
       ),
       child: ListView(
         children: [
+          // Search bar at the top
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CupertinoSearchTextField(
+              placeholder: 'Search',
+            ),
+          ),
+
+          // User account row (name, avatar, forward arrow)
+          Container(
+            color: CupertinoColors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                // Circle avatar (placeholder)
+                const CircleAvatar(
+                  radius: 30,
+                  backgroundColor: CupertinoColors.systemGrey5,
+                  child: Icon(
+                    CupertinoIcons.person,
+                    color: CupertinoColors.black,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                // User name and subtext
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        "Megan Esguerra",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                      Text(
+                        "Apple Account, iCloud, and more",
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: CupertinoColors.inactiveGray,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(
+                  CupertinoIcons.forward,
+                  color: CupertinoColors.inactiveGray,
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 20),
-          _buildSettingsSection(context, [
+          _buildSettingsSection([
+            _buildTile(Icons.warning ,
+            "Your iPhone cant be back up"
+    )
+          ]),
+          const SizedBox(height: 20),
+          _buildSettingsSection([
+            _buildTile(Icons.warning ,
+                "Software Update Available"
+            )
+          ]),
+          const SizedBox(height: 20),
+          _buildSettingsSection([
             _buildTile(
               Icons.airplanemode_active,
               "Airplane Mode",
@@ -101,13 +164,10 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSettingsSection(BuildContext context, List<Widget> tiles) {
-    final isDarkMode = CupertinoTheme.brightnessOf(context) == Brightness.dark;
+  Widget _buildSettingsSection(List<Widget> tiles) {
     return Container(
       decoration: BoxDecoration(
-        color: isDarkMode
-            ? CupertinoColors.darkBackgroundGray
-            : CupertinoColors.white,
+        color: CupertinoColors.white,
         borderRadius: BorderRadius.circular(10),
       ),
       margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -126,18 +186,11 @@ class WifiSettingsPage extends StatefulWidget {
 
 class _WifiSettingsPageState extends State<WifiSettingsPage> {
   bool isWifiEnabled = true;
-  bool activityIndicator = true;
+
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = CupertinoTheme.brightnessOf(context) == Brightness.dark;
     return CupertinoPageScaffold(
-      backgroundColor: isDarkMode
-          ? CupertinoColors.black
-          : CupertinoColors.systemGrey6,
       navigationBar: CupertinoNavigationBar(
-        backgroundColor: isDarkMode
-            ? CupertinoColors.black
-            : CupertinoColors.systemGrey6,
         middle: Text("Settings"),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
@@ -152,9 +205,6 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
           children: [
             SizedBox(height: 20),
             CupertinoListSection.insetGrouped(
-              backgroundColor: isDarkMode
-                  ? CupertinoColors.black
-                  : CupertinoColors.systemGrey6,
               children: [
                 CupertinoListTile(
                   leading: Icon(CupertinoIcons.wifi, size: 32),
@@ -174,10 +224,6 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
                 ),
               ],
             ),
-            if (activityIndicator)
-              const Center(
-                child: CupertinoActivityIndicator(),
-              ),
           ],
         ),
       ),
@@ -185,25 +231,56 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
   }
 }
 
-// Dummy page for Bluetooth settings.
-class BluetoothSettingsPage extends StatelessWidget {
-  const BluetoothSettingsPage({Key? key}) : super(key: key);
+// Updated page for Bluetooth settings.
+class BluetoothSettingsPage extends StatefulWidget {
+  const BluetoothSettingsPage({super.key});
+
+  @override
+  _BluetoothSettingsPageState createState() => _BluetoothSettingsPageState();
+}
+
+class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
+  bool isBluetoothEnabled = true;
 
   @override
   Widget build(BuildContext context) {
-    final isDarkMode = CupertinoTheme.brightnessOf(context) == Brightness.dark;
     return CupertinoPageScaffold(
-      backgroundColor: isDarkMode
-          ? CupertinoColors.black
-          : CupertinoColors.systemGrey6,
       navigationBar: CupertinoNavigationBar(
-        backgroundColor: isDarkMode
-            ? CupertinoColors.black
-            : CupertinoColors.systemGrey6,
         middle: Text("Bluetooth Settings"),
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: Text("Edit", style: TextStyle(color: CupertinoColors.activeBlue)),
+          onPressed: () {
+            // Handle Edit action
+          },
+        ),
       ),
-      child: const Center(
-        child: Text("Bluetooth Settings Details"),
+      child: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 20),
+            CupertinoListSection.insetGrouped(
+              children: [
+                CupertinoListTile(
+                  leading: Icon(CupertinoIcons.bluetooth, size: 32),
+                  title: Text("Bluetooth"),
+                  subtitle: Text("Connect to Bluetooth devices, view available devices..."),
+                ),
+                CupertinoListTile(
+                  title: Text("Bluetooth"),
+                  trailing: CupertinoSwitch(
+                    value: isBluetoothEnabled,
+                    onChanged: (bool value) {
+                      setState(() {
+                        isBluetoothEnabled = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
