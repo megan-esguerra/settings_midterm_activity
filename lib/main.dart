@@ -80,22 +80,6 @@ class SettingsPage extends StatelessWidget {
               ),
             ),
           ]),
-          const SizedBox(height: 20),
-          _buildSettingsSection([
-            _buildTile(CupertinoIcons.bell, "Notifications"),
-            _buildTile(CupertinoIcons.speaker_3, "Sounds & Haptics"),
-            _buildTile(CupertinoIcons.moon, "Focus"),
-            _buildTile(CupertinoIcons.hourglass, "Screen Time"),
-          ]),
-          const SizedBox(height: 20),
-          _buildSettingsSection([
-            _buildTile(CupertinoIcons.gear, "General"),
-            _buildTile(CupertinoIcons.control, "Control Center"),
-            _buildTile(CupertinoIcons.brightness, "Display & Brightness"),
-            _buildTile(CupertinoIcons.home, "Home Screen & App Library"),
-            _buildTile(CupertinoIcons.person_alt_circle, "Accessibility"),
-            _buildTile(CupertinoIcons.photo, "Wallpaper"),
-          ]),
         ],
       ),
     );
