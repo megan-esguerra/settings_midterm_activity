@@ -114,8 +114,8 @@ class SettingsPage extends StatelessWidget {
 class WifiSettingsPage extends StatefulWidget {
   const WifiSettingsPage({super.key});
 
-@override
-_WifiSettingsPageState createState() => _WifiSettingsPageState();
+  @override
+  _WifiSettingsPageState createState() => _WifiSettingsPageState();
 }
 
 class _WifiSettingsPageState extends State<WifiSettingsPage> {
@@ -165,18 +165,56 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
   }
 }
 
-// Dummy page for Bluetooth settings.
-class BluetoothSettingsPage extends StatelessWidget {
-  const BluetoothSettingsPage({Key? key}) : super(key: key);
+// Updated page for Bluetooth settings.
+class BluetoothSettingsPage extends StatefulWidget {
+  const BluetoothSettingsPage({super.key});
+
+  @override
+  _BluetoothSettingsPageState createState() => _BluetoothSettingsPageState();
+}
+
+class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
+  bool isBluetoothEnabled = true;
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
+      navigationBar: CupertinoNavigationBar(
         middle: Text("Bluetooth Settings"),
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: Text("Edit", style: TextStyle(color: CupertinoColors.activeBlue)),
+          onPressed: () {
+            // Handle Edit action
+          },
+        ),
       ),
-      child: const Center(
-        child: Text("Bluetooth Settings Details"),
+      child: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 20),
+            CupertinoListSection.insetGrouped(
+              children: [
+                CupertinoListTile(
+                  leading: Icon(CupertinoIcons.bluetooth, size: 32),
+                  title: Text("Bluetooth"),
+                  subtitle: Text("Connect to Bluetooth devices, view available devices..."),
+                ),
+                CupertinoListTile(
+                  title: Text("Bluetooth"),
+                  trailing: CupertinoSwitch(
+                    value: isBluetoothEnabled,
+                    onChanged: (bool value) {
+                      setState(() {
+                        isBluetoothEnabled = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
