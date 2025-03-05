@@ -120,12 +120,12 @@ class WifiSettingsPage extends StatefulWidget {
 
 class _WifiSettingsPageState extends State<WifiSettingsPage> {
   bool isWifiEnabled = true;
-
+  bool activityIndicator = true;
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: Text("Settings"),
+        middle: Text("WiFi"),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           child: Text("Edit", style: TextStyle(color: CupertinoColors.activeBlue)),
@@ -158,6 +158,10 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
                 ),
               ],
             ),
+            if (activityIndicator)
+              const Center(
+                child: CupertinoActivityIndicator(),
+              ),
           ],
         ),
       ),
