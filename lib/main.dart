@@ -10,9 +10,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CupertinoApp(
+    return CupertinoApp(
       debugShowCheckedModeBanner: false,
-      home: SettingsPage(),
+      theme: CupertinoThemeData(
+        brightness: Brightness.light, // Default to light mode
+      ),
+      home: const SettingsPage(),
     );
   }
 }
@@ -29,7 +32,7 @@ class SettingsPage extends StatelessWidget {
       child: ListView(
         children: [
           const SizedBox(height: 20),
-          _buildSettingsSection([
+          _buildSettingsSection(context, [
             _buildTile(
               Icons.airplanemode_active,
               "Airplane Mode",
@@ -98,10 +101,13 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSettingsSection(List<Widget> tiles) {
+  Widget _buildSettingsSection(BuildContext context, List<Widget> tiles) {
+    final isDarkMode = CupertinoTheme.brightnessOf(context) == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: CupertinoColors.darkBackgroundGray, // Updated background color
+        color: isDarkMode
+            ? CupertinoColors.darkBackgroundGray
+            : CupertinoColors.white,
         borderRadius: BorderRadius.circular(10),
       ),
       margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -123,9 +129,16 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
   bool activityIndicator = true;
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = CupertinoTheme.brightnessOf(context) == Brightness.dark;
     return CupertinoPageScaffold(
+      backgroundColor: isDarkMode
+          ? CupertinoColors.black
+          : CupertinoColors.systemGrey6,
       navigationBar: CupertinoNavigationBar(
-        middle: Text("WiFi"),
+        backgroundColor: isDarkMode
+            ? CupertinoColors.black
+            : CupertinoColors.systemGrey6,
+        middle: Text("Settings"),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
           child: Text("Edit", style: TextStyle(color: CupertinoColors.activeBlue)),
@@ -139,6 +152,9 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
           children: [
             SizedBox(height: 20),
             CupertinoListSection.insetGrouped(
+              backgroundColor: isDarkMode
+                  ? CupertinoColors.black
+                  : CupertinoColors.systemGrey6,
               children: [
                 CupertinoListTile(
                   leading: Icon(CupertinoIcons.wifi, size: 32),
@@ -169,56 +185,25 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
   }
 }
 
-// Updated page for Bluetooth settings.
-class BluetoothSettingsPage extends StatefulWidget {
-  const BluetoothSettingsPage({super.key});
-
-  @override
-  _BluetoothSettingsPageState createState() => _BluetoothSettingsPageState();
-}
-
-class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
-  bool isBluetoothEnabled = true;
+// Dummy page for Bluetooth settings.
+class BluetoothSettingsPage extends StatelessWidget {
+  const BluetoothSettingsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = CupertinoTheme.brightnessOf(context) == Brightness.dark;
     return CupertinoPageScaffold(
+      backgroundColor: isDarkMode
+          ? CupertinoColors.black
+          : CupertinoColors.systemGrey6,
       navigationBar: CupertinoNavigationBar(
+        backgroundColor: isDarkMode
+            ? CupertinoColors.black
+            : CupertinoColors.systemGrey6,
         middle: Text("Bluetooth Settings"),
-        trailing: CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: Text("Edit", style: TextStyle(color: CupertinoColors.activeBlue)),
-          onPressed: () {
-            // Handle Edit action
-          },
-        ),
       ),
-      child: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            CupertinoListSection.insetGrouped(
-              children: [
-                CupertinoListTile(
-                  leading: Icon(CupertinoIcons.bluetooth, size: 32),
-                  title: Text("Bluetooth"),
-                  subtitle: Text("Connect to Bluetooth devices, view available devices..."),
-                ),
-                CupertinoListTile(
-                  title: Text("Bluetooth"),
-                  trailing: CupertinoSwitch(
-                    value: isBluetoothEnabled,
-                    onChanged: (bool value) {
-                      setState(() {
-                        isBluetoothEnabled = value;
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+      child: const Center(
+        child: Text("Bluetooth Settings Details"),
       ),
     );
   }
