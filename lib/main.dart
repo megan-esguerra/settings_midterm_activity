@@ -263,6 +263,8 @@ class BluetoothSettingsPage extends StatefulWidget {
 
 class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
   bool isBluetoothEnabled = true;
+  bool bluetoothState = true;
+  bool activityIndicator = true;
 
   @override
   Widget build(BuildContext context) {
@@ -300,12 +302,17 @@ class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
                     onChanged: (bool value) {
                       setState(() {
                         isBluetoothEnabled = value;
+                        activityIndicator = value;
                       });
                     },
                   ),
                 ),
               ],
             ),
+            if (activityIndicator)
+              const Center(
+                child: CupertinoActivityIndicator(),
+              ),
           ],
         ),
       ),
