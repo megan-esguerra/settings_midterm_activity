@@ -101,7 +101,7 @@ class SettingsPage extends StatelessWidget {
   Widget _buildSettingsSection(List<Widget> tiles) {
     return Container(
       decoration: BoxDecoration(
-        color: CupertinoColors.white,
+        color: CupertinoColors.darkBackgroundGray, // Updated background color
         borderRadius: BorderRadius.circular(10),
       ),
       margin: const EdgeInsets.symmetric(horizontal: 10),
