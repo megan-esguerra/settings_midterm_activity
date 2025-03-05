@@ -111,17 +111,55 @@ class SettingsPage extends StatelessWidget {
 }
 
 // Dummy page for Wi-Fi settings.
-class WifiSettingsPage extends StatelessWidget {
-  const WifiSettingsPage({Key? key}) : super(key: key);
+class WifiSettingsPage extends StatefulWidget {
+  const WifiSettingsPage({super.key});
+
+@override
+_WifiSettingsPageState createState() => _WifiSettingsPageState();
+}
+
+class _WifiSettingsPageState extends State<WifiSettingsPage> {
+  bool isWifiEnabled = true;
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text("Wi-Fi Settings"),
+      navigationBar: CupertinoNavigationBar(
+        middle: Text("Settings"),
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: Text("Edit", style: TextStyle(color: CupertinoColors.activeBlue)),
+          onPressed: () {
+            // Handle Edit action
+          },
+        ),
       ),
-      child: const Center(
-        child: Text("Wi-Fi Settings Details"),
+      child: SafeArea(
+        child: Column(
+          children: [
+            SizedBox(height: 20),
+            CupertinoListSection.insetGrouped(
+              children: [
+                CupertinoListTile(
+                  leading: Icon(CupertinoIcons.wifi, size: 32),
+                  title: Text("Wi-Fi"),
+                  subtitle: Text("Connect to Wi-Fi, view available networks..."),
+                ),
+                CupertinoListTile(
+                  title: Text("Wi-Fi"),
+                  trailing: CupertinoSwitch(
+                    value: isWifiEnabled,
+                    onChanged: (bool value) {
+                      setState(() {
+                        isWifiEnabled = value;
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
