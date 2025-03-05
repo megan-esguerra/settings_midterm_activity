@@ -194,7 +194,6 @@ class SettingsPage extends StatelessWidget {
     );
   }
 }
-
 class WifiSettingsPage extends StatefulWidget {
   const WifiSettingsPage({super.key});
 
@@ -204,55 +203,70 @@ class WifiSettingsPage extends StatefulWidget {
 
 class _WifiSettingsPageState extends State<WifiSettingsPage> {
   bool isWifiEnabled = true;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        middle: const Text("Settings"),
+        middle: Text("Settings"),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
-          child: const Text(
-            "Edit",
-            style: TextStyle(color: CupertinoColors.activeBlue),
-          ),
+          child: Text("Edit",
+              style: TextStyle(color: CupertinoColors.activeBlue)),
           onPressed: () {
             // Handle Edit action
           },
         ),
       ),
       child: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            const SizedBox(height: 20),
-            CupertinoListSection.insetGrouped(
+            Column(
               children: [
-                CupertinoListTile(
-                  leading: const Icon(CupertinoIcons.wifi, size: 32),
-                  title: const Text("Wi-Fi"),
-                  subtitle: const Text(
-                    "Connect to Wi-Fi, view available networks...",
-                  ),
-                ),
-                CupertinoListTile(
-                  title: const Text("Wi-Fi"),
-                  trailing: CupertinoSwitch(
-                    value: isWifiEnabled,
-                    onChanged: (bool value) {
-                      setState(() {
-                        isWifiEnabled = value;
-                      });
-                    },
-                  ),
+                SizedBox(height: 20),
+                CupertinoListSection.insetGrouped(
+                  children: [
+                    CupertinoListTile(
+                      leading: Icon(CupertinoIcons.wifi, size: 32),
+                      title: Text("Wi-Fi"),
+                      subtitle: Text(
+                          "Connect to Wi-Fi, view available networks..."),
+                    ),
+                    CupertinoListTile(
+                      title: Text("Wi-Fi"),
+                      trailing: CupertinoSwitch(
+                        value: isWifiEnabled,
+                        onChanged: (bool value) {
+                          setState(() {
+                            isLoading = true;
+                            isWifiEnabled = value;
+                          });
+                          Future.delayed(Duration(seconds: 2), () {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
+            if (isLoading)
+              Center(
+                child: CupertinoActivityIndicator(
+                  radius: 20,
+                ),
+              ),
           ],
         ),
       ),
     );
   }
 }
+
 
 class BluetoothSettingsPage extends StatefulWidget {
   const BluetoothSettingsPage({super.key});
