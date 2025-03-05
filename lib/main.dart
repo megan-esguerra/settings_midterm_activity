@@ -30,11 +30,55 @@ class SettingsPage extends StatelessWidget {
         children: [
           const SizedBox(height: 20),
           _buildSettingsSection([
-            _buildTile(Icons.airplanemode_active, "Airplane Mode", trailing: CupertinoSwitch(value: false, onChanged: (bool value) {})),
-            _buildTile(CupertinoIcons.wifi, "Wi-Fi", trailing: Text("WiFi", style: TextStyle(color: CupertinoColors.inactiveGray))),
-            _buildTile(CupertinoIcons.bluetooth, "Bluetooth", trailing: Text("On", style: TextStyle(color: CupertinoColors.inactiveGray))),
+            _buildTile(
+              Icons.airplanemode_active,
+              "Airplane Mode",
+              trailing: CupertinoSwitch(
+                value: false,
+                onChanged: (bool value) {},
+              ),
+            ),
+            _buildTile(
+              CupertinoIcons.wifi,
+              "Wi-Fi",
+              trailing: const Text(
+                "WiFi",
+                style: TextStyle(color: CupertinoColors.inactiveGray),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => const WifiSettingsPage(),
+                  ),
+                );
+              },
+            ),
+            _buildTile(
+              CupertinoIcons.bluetooth,
+              "Bluetooth",
+              trailing: const Text(
+                "On",
+                style: TextStyle(color: CupertinoColors.inactiveGray),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => const BluetoothSettingsPage(),
+                  ),
+                );
+              },
+            ),
             _buildTile(CupertinoIcons.phone, "Cellular"),
-            _buildTile(CupertinoIcons.personalhotspot, "Personal Hotspot", trailing: Text("Off", style: TextStyle(color: CupertinoColors.inactiveGray))),
+            _buildTile(
+              CupertinoIcons.personalhotspot,
+              "Personal Hotspot",
+              trailing: const Text(
+                "Off",
+                style: TextStyle(color: CupertinoColors.inactiveGray),
+              ),
+            ),
           ]),
           const SizedBox(height: 20),
           _buildSettingsSection([
@@ -57,11 +101,16 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTile(IconData icon, String title, {Widget? trailing}) {
-    return CupertinoListTile(
-      leading: Icon(icon, color: CupertinoColors.activeBlue),
-      title: Text(title),
-      trailing: trailing ?? const CupertinoListTileChevron(),
+  // Updated _buildTile method to accept an onTap callback.
+  Widget _buildTile(IconData icon, String title,
+      {Widget? trailing, VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: CupertinoListTile(
+        leading: Icon(icon, color: CupertinoColors.activeBlue),
+        title: Text(title),
+        trailing: trailing ?? const CupertinoListTileChevron(),
+      ),
     );
   }
 
@@ -73,6 +122,40 @@ class SettingsPage extends StatelessWidget {
       ),
       margin: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(children: tiles),
+    );
+  }
+}
+
+// Dummy page for Wi-Fi settings.
+class WifiSettingsPage extends StatelessWidget {
+  const WifiSettingsPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text("Wi-Fi Settings"),
+      ),
+      child: const Center(
+        child: Text("Wi-Fi Settings Details"),
+      ),
+    );
+  }
+}
+
+// Dummy page for Bluetooth settings.
+class BluetoothSettingsPage extends StatelessWidget {
+  const BluetoothSettingsPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      navigationBar: const CupertinoNavigationBar(
+        middle: Text("Bluetooth Settings"),
+      ),
+      child: const Center(
+        child: Text("Bluetooth Settings Details"),
+      ),
     );
   }
 }
