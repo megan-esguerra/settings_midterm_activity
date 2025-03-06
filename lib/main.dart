@@ -174,6 +174,14 @@ class SettingsPage extends StatelessWidget {
                   color: CupertinoColors.activeBlue,
                 ),
                 title: const Text("Cellular"),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => const CellularSettingsPage(),
+                    ),
+                  );
+                },
                 trailing: const CupertinoListTileChevron(),
               ),
               CupertinoListTile(
@@ -333,3 +341,89 @@ class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
     );
   }
 }
+
+class CellularSettingsPage extends StatefulWidget {
+  const CellularSettingsPage({Key? key}) : super(key: key);
+
+  @override
+  _CellularSettingsPageState createState() => _CellularSettingsPageState();
+}
+
+class _CellularSettingsPageState extends State<CellularSettingsPage> {
+  bool isCellularDataEnabled = true;
+  bool isDataRoamingEnabled = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDarkMode = CupertinoTheme.brightnessOf(context) == Brightness.dark;
+    return CupertinoPageScaffold(
+      backgroundColor: isDarkMode
+          ? CupertinoColors.black
+          : CupertinoColors.systemGrey6,
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: isDarkMode
+            ? CupertinoColors.black
+            : CupertinoColors.systemGrey6,
+        middle: Text("Cellular Data Settings"),
+      ),
+      child: ListView(
+        children: [
+          const SizedBox(height: 20),
+          CupertinoListSection.insetGrouped(
+            backgroundColor: isDarkMode
+                ? CupertinoColors.black
+                : CupertinoColors.systemGrey6,
+            children: [
+              CupertinoListTile(
+                leading: Icon(CupertinoIcons.antenna_radiowaves_left_right, size: 32),
+                title: Text("Cellular"),
+                subtitle: Text("Find out how much data you're using, set data restriction, manage carrier settings such as esim, and more. learn more..."),
+              ),
+              CupertinoListTile(
+                leading: Icon(CupertinoIcons.phone, size: 32),
+                title: Text("Cellular Data"),
+                trailing: CupertinoSwitch(
+                  value: isCellularDataEnabled,
+                  onChanged: (bool value) {
+                    setState(() {
+                      isCellularDataEnabled = value;
+                    });
+                  },
+                ),
+              ),
+              CupertinoListTile(
+                title: Text("Data Usage"),
+                trailing: Text(
+                  "2.5 GB",
+                  style: TextStyle(color: CupertinoColors.inactiveGray),
+                ),
+              ),
+              CupertinoListTile(
+                title: Text("Data Roaming"),
+                trailing: CupertinoSwitch(
+                  value: isDataRoamingEnabled,
+                  onChanged: (bool value) {
+                    setState(() {
+                      isDataRoamingEnabled = value;
+                    });
+                  },
+                ),
+              ),
+              CupertinoListTile(
+                title: Text("Network Selection"),
+                trailing: Text(
+                  "Automatic",
+                  style: TextStyle(color: CupertinoColors.inactiveGray),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+
