@@ -21,11 +21,35 @@ class MyApp extends StatelessWidget {
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
+  void _showDevOpsModal(BuildContext context) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: const Text('DevOps Teams'),
+        message: const Text('Information about DevOps Teams.'),
+        actions: <CupertinoActionSheetAction>[
+          CupertinoActionSheetAction(
+            child: const Text('Close'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text("Settings"),
+      navigationBar: CupertinoNavigationBar(
+        leading: const Text("Settings"),
+        middle: const SizedBox.shrink(), // Remove the default middle text
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: () => _showDevOpsModal(context),
+          child: const Icon(CupertinoIcons.info_circle),
+        ),
       ),
       child: ListView(
         children: [
@@ -247,12 +271,13 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
                         value: isWifiEnabled,
                         onChanged: (bool value) {
                           setState(() {
-                            isLoading = true;
+                            isLoading = true; // Start loading when the switch changes
                             isWifiEnabled = value;
                           });
+                          // Simulate a delay for demonstration purposes
                           Future.delayed(Duration(seconds: 2), () {
                             setState(() {
-                              isLoading = false;
+                              isLoading = false; // Stop loading after the delay
                             });
                           });
                         },
@@ -262,7 +287,7 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
                 ),
               ],
             ),
-            if (isLoading)
+            if (isLoading) // Show the indicator only when isLoading is true
               Center(
                 child: CupertinoActivityIndicator(
                   radius: 20,
