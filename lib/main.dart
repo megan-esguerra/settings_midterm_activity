@@ -345,9 +345,11 @@ class WifiSettingsPage extends StatefulWidget {
 
 class _WifiSettingsPageState extends State<WifiSettingsPage> {
   late bool isWifiEnabled;
-  bool isLoading = false;
+  bool isWifiLoading = false;
+  bool isNetworkLoading = false;
   bool isConnected = false;
   String? connectedNetwork;
+  String? loadingNetwork;
   List<String> availableWifiNetworks = [
     "HCC_ICSlab",
     "HCC_CpELab",
@@ -363,7 +365,7 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
 
   void _toggleWifi(bool value) {
     setState(() {
-      isLoading = true;
+      isWifiLoading = true;
       isWifiEnabled = value;
       if (!value) {
         isConnected = false;
@@ -373,7 +375,7 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
 
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
-        isLoading = false;
+        isWifiLoading = false;
       });
       widget.onWifiChanged(value);
     });
@@ -381,14 +383,16 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
 
   void _connectToWifi(String network) {
     setState(() {
-      isLoading = true;
+      isNetworkLoading = true;
+      loadingNetwork = network;
     });
 
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
-        isLoading = false;
+        isNetworkLoading = false;
         isConnected = true;
         connectedNetwork = network;
+        loadingNetwork = null;
       });
       widget.onConnected(network);
     });
@@ -403,75 +407,94 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
       child: SafeArea(
         child: Column(
           children: [
-            CupertinoListSection.insetGrouped(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [CupertinoColors.systemBlue, CupertinoColors.systemTeal],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    CupertinoListSection.insetGrouped(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Icon(CupertinoIcons.wifi, size: 32, color: CupertinoColors.white),
+                              const SizedBox(height: 10),
+                              const Text(
+                                "Wi-Fi",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: CupertinoColors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              RichText(
+                                text: TextSpan(
+                                  text: "Connect to Wi-Fi networks, view available networks ",
+                                  style: TextStyle(
+                                    color: CupertinoColors.white,
+                                    fontSize: 14,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: "learn more...",
+                                      style: TextStyle(
+                                        color: CupertinoColors.activeBlue,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                        CupertinoListTile(
+                          title: const Text("Wi-Fi"),
+                          trailing: CupertinoSwitch(
+                            value: isWifiEnabled,
+                            onChanged: _toggleWifi,
+                          ),
+                        ),
+                      ],
                     ),
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Icon(CupertinoIcons.wifi, size: 32, color: CupertinoColors.white),
-                      const SizedBox(height: 10),
-                      const Text(
-                        "Wi-Fi",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: CupertinoColors.white,
+                    if (isWifiEnabled)
+                      CupertinoListSection.insetGrouped(
+                        header: const Padding(
+                          padding: EdgeInsets.only(bottom: 8.0),
+                          child: Text(
+                            "CHOOSE A NETWORK",
+                            style: TextStyle(fontSize: 13),
+                          ),
                         ),
+                        children: availableWifiNetworks.map((network) {
+                          return CupertinoListTile(
+                            leading: const Icon(CupertinoIcons.wifi),
+                            title: Text(network),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (loadingNetwork == network)
+                                  const CupertinoActivityIndicator(radius: 10),
+                                if (isConnected && connectedNetwork == network)
+                                  const Icon(CupertinoIcons.checkmark_alt, color: CupertinoColors.activeGreen),
+                              ],
+                            ),
+                            onTap: () => _connectToWifi(network),
+                          );
+                        }).toList(),
                       ),
-                      const SizedBox(height: 5),
-                      const Text(
-                        "Connect to Wi-Fi networks, view available networks...",
-                        style: TextStyle(
-                          color: CupertinoColors.white,
-                          fontSize: 14,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
-                CupertinoListTile(
-                  title: const Text("Wi-Fi"),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (isLoading)
-                        const CupertinoActivityIndicator(
-                          radius: 10,
-                        ),
-                      const SizedBox(width: 8),
-                      CupertinoSwitch(
-                        value: isWifiEnabled,
-                        onChanged: _toggleWifi,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-            if (isWifiEnabled)
-              CupertinoListSection.insetGrouped(
-                header: const Text("Choose a Network"),
-                children: availableWifiNetworks.map((network) {
-                  return CupertinoListTile(
-                    leading: const Icon(CupertinoIcons.wifi),
-                    title: Text(network),
-                    trailing: isConnected && connectedNetwork == network
-                        ? const Icon(CupertinoIcons.checkmark_alt,
-                        color: CupertinoColors.activeGreen)
-                        : null,
-                    onTap: () => _connectToWifi(network),
-                  );
-                }).toList(),
+            if (isWifiLoading)
+              const Padding(
+                padding: EdgeInsets.only(bottom: 30.0),
+                child: CupertinoActivityIndicator(radius: 15),
               ),
           ],
         ),
@@ -498,13 +521,15 @@ class BluetoothSettingsPage extends StatefulWidget {
 
 class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
   late bool isBluetoothEnabled;
-  bool isLoading = false;
+  bool isBluetoothLoading = false;
+  bool isDeviceLoading = false;
   bool isConnected = false;
   String? connectedDevice;
-  List<String> availableDevices = [
-    "Kristel's Device",
-    "Infinix_1",
-    "Galaxy Watch",
+  String? loadingDevice;
+  List<Map<String, dynamic>> availableBluetoothDevices = [
+    {"name": "Kristel's Device", "icon": CupertinoIcons.device_laptop},
+    {"name": "Infinix_1", "icon": CupertinoIcons.device_phone_portrait},
+    {"name": "Galaxy 7", "icon": CupertinoIcons.device_phone_portrait},
   ];
 
   @override
@@ -515,7 +540,7 @@ class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
 
   void _toggleBluetooth(bool value) {
     setState(() {
-      isLoading = true;
+      isBluetoothLoading = true;
       isBluetoothEnabled = value;
       if (!value) {
         isConnected = false;
@@ -525,7 +550,7 @@ class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
 
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
-        isLoading = false;
+        isBluetoothLoading = false;
       });
       widget.onBluetoothChanged(value);
     });
@@ -533,14 +558,16 @@ class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
 
   void _connectToDevice(String device) {
     setState(() {
-      isLoading = true;
+      isDeviceLoading = true;
+      loadingDevice = device;
     });
 
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
-        isLoading = false;
+        isDeviceLoading = false;
         isConnected = true;
         connectedDevice = device;
+        loadingDevice = null;
       });
       widget.onConnected(device);
     });
@@ -555,75 +582,94 @@ class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
       child: SafeArea(
         child: Column(
           children: [
-            CupertinoListSection.insetGrouped(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [CupertinoColors.systemPurple, CupertinoColors.systemPink],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    CupertinoListSection.insetGrouped(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Icon(CupertinoIcons.bluetooth, size: 32, color: CupertinoColors.white),
+                              const SizedBox(height: 10),
+                              const Text(
+                                "Bluetooth",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: CupertinoColors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              RichText(
+                                text: TextSpan(
+                                  text: "Connect to Bluetooth devices, view available devices ",
+                                  style: TextStyle(
+                                    color: CupertinoColors.white,
+                                    fontSize: 14,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: "learn more...",
+                                      style: TextStyle(
+                                        color: CupertinoColors.activeBlue,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                        CupertinoListTile(
+                          title: const Text("Bluetooth"),
+                          trailing: CupertinoSwitch(
+                            value: isBluetoothEnabled,
+                            onChanged: _toggleBluetooth,
+                          ),
+                        ),
+                      ],
                     ),
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Icon(CupertinoIcons.bluetooth, size: 32, color: CupertinoColors.white),
-                      const SizedBox(height: 10),
-                      const Text(
-                        "Bluetooth",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: CupertinoColors.white,
+                    if (isBluetoothEnabled)
+                      CupertinoListSection.insetGrouped(
+                        header: const Padding(
+                          padding: EdgeInsets.only(bottom: 8.0),
+                          child: Text(
+                            "AVAILABLE DEVICES",
+                            style: TextStyle(fontSize: 13),
+                          ),
                         ),
+                        children: availableBluetoothDevices.map((device) {
+                          return CupertinoListTile(
+                            leading: Icon(device["icon"], color: CupertinoColors.white),
+                            title: Text(device["name"]),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (loadingDevice == device["name"])
+                                  const CupertinoActivityIndicator(radius: 10),
+                                if (isConnected && connectedDevice == device["name"])
+                                  const Icon(CupertinoIcons.checkmark_alt, color: CupertinoColors.activeGreen),
+                              ],
+                            ),
+                            onTap: () => _connectToDevice(device["name"]),
+                          );
+                        }).toList(),
                       ),
-                      const SizedBox(height: 5),
-                      const Text(
-                        "Connect to Bluetooth devices, view available devices...",
-                        style: TextStyle(
-                          color: CupertinoColors.white,
-                          fontSize: 14,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
-                CupertinoListTile(
-                  title: const Text("Bluetooth"),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (isLoading)
-                        const CupertinoActivityIndicator(
-                          radius: 10,
-                        ),
-                      const SizedBox(width: 8),
-                      CupertinoSwitch(
-                        value: isBluetoothEnabled,
-                        onChanged: _toggleBluetooth,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
-            if (isBluetoothEnabled)
-              CupertinoListSection.insetGrouped(
-                header: const Text("My Devices"),
-                children: availableDevices.map((device) {
-                  return CupertinoListTile(
-                    leading: const Icon(CupertinoIcons.bluetooth),
-                    title: Text(device),
-                    trailing: isConnected && connectedDevice == device
-                        ? const Icon(CupertinoIcons.checkmark_alt,
-                        color: CupertinoColors.activeGreen)
-                        : null,
-                    onTap: () => _connectToDevice(device),
-                  );
-                }).toList(),
+            if (isBluetoothLoading)
+              const Padding(
+                padding: EdgeInsets.only(bottom: 30.0),
+                child: CupertinoActivityIndicator(radius: 15),
               ),
           ],
         ),
@@ -631,7 +677,6 @@ class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
     );
   }
 }
-
 class CellularSettingsPage extends StatefulWidget {
   const CellularSettingsPage({Key? key}) : super(key: key);
 
@@ -666,8 +711,22 @@ class _CellularSettingsPageState extends State<CellularSettingsPage> {
             children: [
               CupertinoListTile(
                 leading: Icon(CupertinoIcons.antenna_radiowaves_left_right, size: 32),
-                title: Text("Cellular"),
-                subtitle: Text("Find out how much data you're using, set data restriction, manage carrier settings such as esim, and more. learn more..."),
+                title: RichText(
+                  text: TextSpan(
+                    text: "Find out how much data you're using, set data restriction, manage carrier settings such as esim, and more. ",
+                    style: TextStyle(
+                      color: isDarkMode ? CupertinoColors.white : CupertinoColors.black,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: "learn more...",
+                        style: TextStyle(
+                          color: CupertinoColors.activeBlue,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
               CupertinoListTile(
                 leading: Icon(CupertinoIcons.phone, size: 32),
@@ -713,7 +772,3 @@ class _CellularSettingsPageState extends State<CellularSettingsPage> {
     );
   }
 }
-
-
-
-
