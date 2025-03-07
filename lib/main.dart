@@ -113,6 +113,10 @@ class _SettingsPageState extends State<SettingsPage> {
         isBluetoothEnabled = false;
         connectedWifiNetwork = null;
         connectedBluetoothDevice = null;
+      } else {
+        // When Airplane Mode is turned off, set Wi-Fi and Bluetooth to "Not Connected"
+        connectedWifiNetwork = null;
+        connectedBluetoothDevice = null;
       }
     });
   }
