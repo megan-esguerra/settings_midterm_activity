@@ -365,8 +365,12 @@ class BluetoothSettingsPage extends StatefulWidget {
 
 class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
   bool isBluetoothEnabled = true;
-  bool bluetoothState = true;
   bool activityIndicator = true;
+
+  final List<Map<String, String>> devices = [
+    {"name": "Kristel", "status": "Not Connected"},
+    {"name": "Infinix_1", "status": "Not Connected"},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -380,42 +384,112 @@ class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
             style: TextStyle(color: CupertinoColors.activeBlue),
           ),
           onPressed: () {
-            // Handle Edit action
+
           },
         ),
       ),
       child: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            CupertinoListSection.insetGrouped(
-              children: [
-                CupertinoListTile(
-                  leading: const Icon(CupertinoIcons.bluetooth, size: 32),
-                  title: const Text("Bluetooth"),
-                  subtitle: const Text(
-                    "Connect to Bluetooth devices, view available devices...",
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              CupertinoListSection.insetGrouped(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [CupertinoColors.black, CupertinoColors.systemGrey],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(CupertinoIcons.bluetooth, size: 32, color: CupertinoColors.white),
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          "Bluetooth",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Center(
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              text: "Connect to Bluetooth devices, view available devices... ",
+                              style: TextStyle(color: CupertinoColors.white),
+                              children: [
+                                TextSpan(
+                                  text: "Learn more...",
+                                  style: TextStyle(color: CupertinoColors.activeBlue),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  CupertinoListTile(
+                    title: const Text("Bluetooth"),
+                    trailing: CupertinoSwitch(
+                      value: isBluetoothEnabled,
+                      onChanged: (bool value) {
+                        setState(() {
+                          isBluetoothEnabled = value;
+                          activityIndicator = value;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              if (isBluetoothEnabled) ...[
+                const SizedBox(height: 20),
+                const Text(
+                  "My Devices",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                CupertinoListTile(
-                  title: const Text("Bluetooth"),
-                  trailing: CupertinoSwitch(
-                    value: isBluetoothEnabled,
-                    onChanged: (bool value) {
-                      setState(() {
-                        isBluetoothEnabled = value;
-                        activityIndicator = value;
-                      });
-                    },
-                  ),
+                CupertinoListSection.insetGrouped(
+                  children: devices.map((device) {
+                    return CupertinoListTile(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(device["name"]!),
+                          Row(
+                            children: [
+                              Text(
+                                device["status"]!,
+                                style: TextStyle(color: CupertinoColors.inactiveGray),
+                              ),
+                              const SizedBox(width: 5),
+                              const Icon(CupertinoIcons.info, color: CupertinoColors.inactiveGray, size: 16),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
                 ),
               ],
-            ),
-            if (activityIndicator)
-              const Center(
-                child: CupertinoActivityIndicator(),
-              ),
-          ],
+              if (activityIndicator)
+                const Center(
+                  child: CupertinoActivityIndicator(),
+                ),
+            ],
+          ),
         ),
       ),
     );
