@@ -44,50 +44,11 @@ class _SettingsPageState extends State<SettingsPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ClipOval(
-                  child: Image.asset(
-                    "assets/images/LuisAvatar.jpg",
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(width: 5),
-                ClipOval(
-                  child: Image.asset(
-                    "assets/images/AdrianAvatar.jpg",
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(width: 5),
-                ClipOval(
-                  child: Image.asset(
-                    "assets/images/KristelAvatar.png",
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(width: 5),
-                ClipOval(
-                  child: Image.asset(
-                    "assets/images/MeganAvatar.jpg",
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(width: 5),
-                ClipOval(
-                  child: Image.asset(
-                    "assets/images/JohnnIvanAvatar.jpg",
-                    width: 50,
-                    height: 50,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                _buildAvatar("assets/images/LuisAvatar.jpg", "Luis  "),
+                _buildAvatar("assets/images/AdrianAvatar.jpg", "Adrian  "),
+                _buildAvatar("assets/images/KristelAvatar.png", "Kristel "),
+                _buildAvatar("assets/images/MeganAvatar.jpg", "Megan "),
+                _buildAvatar("assets/images/JohnnIvanAvatar.jpg", "JohnIvan "),
               ],
             ),
           ],
@@ -104,6 +65,27 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  /// Helper Widget to Create Avatar with Name
+  Widget _buildAvatar(String imagePath, String name) {
+    return Column(
+      children: [
+        ClipOval(
+          child: Image.asset(
+            imagePath,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+          ),
+        ),
+        const SizedBox(height: 5),
+        Text(
+          name,
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
+
   void _toggleAirplaneMode(bool value) {
     setState(() {
       airplaneMode = value;
@@ -117,6 +99,7 @@ class _SettingsPageState extends State<SettingsPage> {
         // When Airplane Mode is turned off, set Wi-Fi and Bluetooth to "Not Connected"
         connectedWifiNetwork = null;
         connectedBluetoothDevice = null;
+
       }
     });
   }
@@ -125,7 +108,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
-        leading: const Text("Settings"),
+        leading: Text('Settings', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         middle: const SizedBox.shrink(),
         trailing: CupertinoButton(
           padding: EdgeInsets.zero,
@@ -184,7 +167,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
           ),
-          const SizedBox(height: 10),
+
           CupertinoListSection.insetGrouped(
             children: [
               CupertinoListTile(
@@ -197,7 +180,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ],
           ),
-          const SizedBox(height: 15),
+
           CupertinoListSection.insetGrouped(
             children: [
               CupertinoListTile(
@@ -210,7 +193,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           CupertinoListSection.insetGrouped(
             children: [
               CupertinoListTile(
