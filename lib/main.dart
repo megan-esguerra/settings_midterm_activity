@@ -8,6 +8,7 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     return const CupertinoApp(
@@ -17,23 +18,93 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
-  @override
-  _SettingsPageState createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
-  bool airplaneMode = false;
-  bool isWifiEnabled = true;
-  bool isBluetoothEnabled = true;
+  void _showDevOpsModal(BuildContext context) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: const Text('DevOps Teams'),
+        message: Column(
+          mainAxisSize: MainAxisSize.min, // Avoids excessive spacing
+          children: [
+            const Text('Information about DevOps Teams.'),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipOval(
+                  child: Image.asset(
+                    "assets/images/LuisAvatar.jpg",
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 5), // Space between images
+                ClipOval(
+                  child: Image.asset(
+                    "assets/images/AdrianAvatar.jpg",
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 5),
+                ClipOval(
+                  child: Image.asset(
+                    "assets/images/KristelAvatar.png",
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 5),
+                ClipOval(
+                  child: Image.asset(
+                    "assets/images/MeganAvatar.jpg",
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 5),
+                ClipOval(
+                  child: Image.asset(
+                    "assets/images/JohnnIvanAvatar.jpg",
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        actions: <CupertinoActionSheetAction>[
+          CupertinoActionSheetAction(
+            child: const Text('Close'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text("Settings"),
+      navigationBar: CupertinoNavigationBar(
+        leading: const Text("Settings"),
+        middle: const SizedBox.shrink(), // Remove the default middle text
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: () => _showDevOpsModal(context),
+          child: const Icon(CupertinoIcons.info_circle),
+        ),
       ),
       child: ListView(
         children: [
@@ -45,12 +116,13 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
 
-          // User account row
+          // User account row (name, avatar, forward arrow)
           Container(
             color: CupertinoColors.darkBackgroundGray,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
+                // Circle avatar (placeholder)
                 const CircleAvatar(
                   radius: 30,
                   backgroundColor: CupertinoColors.systemGrey5,
@@ -60,6 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 const SizedBox(width: 10),
+                // User name and subtext
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,10 +194,9 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           const SizedBox(height: 20),
 
-          // Third section with Airplane Mode, Wi‑Fi, and Bluetooth
+          // Third section
           CupertinoListSection.insetGrouped(
             children: [
-              // Airplane Mode tile
               CupertinoListTile(
                 leading: Icon(
                   CupertinoIcons.airplane,
@@ -132,66 +204,45 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 title: const Text("Airplane Mode"),
                 trailing: CupertinoSwitch(
-                  value: airplaneMode,
-                  onChanged: (bool value) {
-                    setState(() {
-                      airplaneMode = value;
-                    });
-                  },
+                  value: false,
+                  onChanged: (bool value) {},
                 ),
               ),
-              // Wi‑Fi tile
               CupertinoListTile(
                 leading: const Icon(
                   CupertinoIcons.wifi,
                   color: CupertinoColors.activeBlue,
                 ),
-                title: const Text("Wi‑Fi"),
-                trailing: Text(
-                  isWifiEnabled ? "On" : "Off",
-                  style: const TextStyle(color: CupertinoColors.inactiveGray),
+                title: const Text("Wi-Fi"),
+                trailing: const Text(
+                  "WiFi",
+                  style: TextStyle(color: CupertinoColors.inactiveGray),
                 ),
                 onTap: () {
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) => WifiSettingsPage(
-                        isWifiEnabled: isWifiEnabled,
-                        onWifiChanged: (value) {
-                          setState(() {
-                            isWifiEnabled = value;
-                            // No longer forcing Bluetooth off here.
-                          });
-                        },
-                      ),
+                      builder: (context) => const WifiSettingsPage(),
                     ),
                   );
                 },
               ),
-              // Bluetooth tile
               CupertinoListTile(
                 leading: const Icon(
                   CupertinoIcons.bluetooth,
                   color: CupertinoColors.activeBlue,
                 ),
                 title: const Text("Bluetooth"),
-                trailing: Text(
-                  isBluetoothEnabled ? "On" : "Off",
-                  style: const TextStyle(color: CupertinoColors.inactiveGray),
+                trailing: const Text(
+                  "On",
+                  style: TextStyle(color: CupertinoColors.inactiveGray),
                 ),
+
                 onTap: () {
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
-                      builder: (context) => BluetoothSettingsPage(
-                        isBluetoothEnabled: isBluetoothEnabled,
-                        isWifiEnabled: isWifiEnabled,
-                        onBluetoothChanged: (value) {
-                          setState(() {
-                            isBluetoothEnabled = value;
-                          });
-                        },
-                      ),
+                      builder: (context) => const BluetoothSettingsPage(),
                     ),
                   );
                 },
@@ -202,6 +253,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   color: CupertinoColors.activeBlue,
                 ),
                 title: const Text("Cellular"),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => const CellularSettingsPage(),
+                    ),
+                  );
+                },
                 trailing: const CupertinoListTileChevron(),
               ),
               CupertinoListTile(
@@ -222,64 +281,73 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
-
-// Wi‑Fi Settings Page without a "Done" button; changes are sent back immediately.
 class WifiSettingsPage extends StatefulWidget {
-  final bool isWifiEnabled;
-  final ValueChanged<bool> onWifiChanged;
-
-  const WifiSettingsPage({
-    Key? key,
-    required this.isWifiEnabled,
-    required this.onWifiChanged,
-  }) : super(key: key);
+  const WifiSettingsPage({super.key});
 
   @override
   _WifiSettingsPageState createState() => _WifiSettingsPageState();
 }
 
 class _WifiSettingsPageState extends State<WifiSettingsPage> {
-  late bool isWifiEnabled;
-
-  @override
-  void initState() {
-    super.initState();
-    isWifiEnabled = widget.isWifiEnabled;
-  }
+  bool isWifiEnabled = true;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      // The back arrow will automatically appear in the navigation bar.
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text("Wi‑Fi Settings"),
+      navigationBar: CupertinoNavigationBar(
+        middle: Text("Settings"),
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: Text("Edit",
+              style: TextStyle(color: CupertinoColors.activeBlue)),
+          onPressed: () {
+            // Handle Edit action
+          },
+        ),
       ),
       child: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            const SizedBox(height: 20),
-            CupertinoListSection.insetGrouped(
+            Column(
               children: [
-                CupertinoListTile(
-                  leading: const Icon(CupertinoIcons.wifi, size: 32),
-                  title: const Text("Wi‑Fi"),
-                  subtitle:
-                  const Text("Connect to Wi‑Fi, view available networks..."),
-                ),
-                CupertinoListTile(
-                  title: const Text("Wi‑Fi"),
-                  trailing: CupertinoSwitch(
-                    value: isWifiEnabled,
-                    onChanged: (bool value) {
-                      setState(() {
-                        isWifiEnabled = value;
-                      });
-                      widget.onWifiChanged(value);
-                    },
-                  ),
+                SizedBox(height: 20),
+                CupertinoListSection.insetGrouped(
+                  children: [
+                    CupertinoListTile(
+                      leading: Icon(CupertinoIcons.wifi, size: 32),
+                      title: Text("Wi-Fi"),
+                      subtitle: Text(
+                          "Connect to Wi-Fi, view available networks..."),
+                    ),
+                    CupertinoListTile(
+                      title: Text("Wi-Fi"),
+                      trailing: CupertinoSwitch(
+                        value: isWifiEnabled,
+                        onChanged: (bool value) {
+                          setState(() {
+                            isLoading = true; // Start loading when the switch changes
+                            isWifiEnabled = value;
+                          });
+                          // Simulate a delay for demonstration purposes
+                          Future.delayed(Duration(seconds: 2), () {
+                            setState(() {
+                              isLoading = false; // Stop loading after the delay
+                            });
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
+            if (isLoading) // Show the indicator only when isLoading is true
+              Center(
+                child: CupertinoActivityIndicator(
+                  radius: 20,
+                ),
+              ),
           ],
         ),
       ),
@@ -287,41 +355,34 @@ class _WifiSettingsPageState extends State<WifiSettingsPage> {
   }
 }
 
-// Bluetooth Settings Page without a "Done" button; changes are sent back immediately.
-class BluetoothSettingsPage extends StatefulWidget {
-  final bool isBluetoothEnabled;
-  final bool isWifiEnabled;
-  final ValueChanged<bool> onBluetoothChanged;
 
-  const BluetoothSettingsPage({
-    Key? key,
-    required this.isBluetoothEnabled,
-    required this.isWifiEnabled,
-    required this.onBluetoothChanged,
-  }) : super(key: key);
+class BluetoothSettingsPage extends StatefulWidget {
+  const BluetoothSettingsPage({super.key});
 
   @override
   _BluetoothSettingsPageState createState() => _BluetoothSettingsPageState();
 }
 
 class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
-  late bool isBluetoothEnabled;
-  late bool isWifiEnabled;
-
-  @override
-  void initState() {
-    super.initState();
-    isBluetoothEnabled = widget.isBluetoothEnabled;
-    isWifiEnabled = widget.isWifiEnabled;
-    // Do not force Bluetooth off when Wi‑Fi is off.
-  }
+  bool isBluetoothEnabled = true;
+  bool bluetoothState = true;
+  bool activityIndicator = true;
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      // Back arrow provided automatically.
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text("Bluetooth Settings"),
+      navigationBar: CupertinoNavigationBar(
+        middle: const Text("Bluetooth Settings"),
+        trailing: CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: const Text(
+            "Edit",
+            style: TextStyle(color: CupertinoColors.activeBlue),
+          ),
+          onPressed: () {
+            // Handle Edit action
+          },
+        ),
       ),
       child: SafeArea(
         child: Column(
@@ -333,7 +394,8 @@ class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
                   leading: const Icon(CupertinoIcons.bluetooth, size: 32),
                   title: const Text("Bluetooth"),
                   subtitle: const Text(
-                      "Connect to Bluetooth devices, view available devices..."),
+                    "Connect to Bluetooth devices, view available devices...",
+                  ),
                 ),
                 CupertinoListTile(
                   title: const Text("Bluetooth"),
@@ -342,16 +404,106 @@ class _BluetoothSettingsPageState extends State<BluetoothSettingsPage> {
                     onChanged: (bool value) {
                       setState(() {
                         isBluetoothEnabled = value;
+                        activityIndicator = value;
                       });
-                      widget.onBluetoothChanged(value);
                     },
                   ),
                 ),
               ],
             ),
+            if (activityIndicator)
+              const Center(
+                child: CupertinoActivityIndicator(),
+              ),
           ],
         ),
       ),
     );
   }
 }
+
+class CellularSettingsPage extends StatefulWidget {
+  const CellularSettingsPage({Key? key}) : super(key: key);
+
+  @override
+  _CellularSettingsPageState createState() => _CellularSettingsPageState();
+}
+
+class _CellularSettingsPageState extends State<CellularSettingsPage> {
+  bool isCellularDataEnabled = true;
+  bool isDataRoamingEnabled = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDarkMode = CupertinoTheme.brightnessOf(context) == Brightness.dark;
+    return CupertinoPageScaffold(
+      backgroundColor: isDarkMode
+          ? CupertinoColors.black
+          : CupertinoColors.systemGrey6,
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: isDarkMode
+            ? CupertinoColors.black
+            : CupertinoColors.systemGrey6,
+        middle: Text("Cellular Data Settings"),
+      ),
+      child: ListView(
+        children: [
+          const SizedBox(height: 20),
+          CupertinoListSection.insetGrouped(
+            backgroundColor: isDarkMode
+                ? CupertinoColors.black
+                : CupertinoColors.systemGrey6,
+            children: [
+              CupertinoListTile(
+                leading: Icon(CupertinoIcons.antenna_radiowaves_left_right, size: 32),
+                title: Text("Cellular"),
+                subtitle: Text("Find out how much data you're using, set data restriction, manage carrier settings such as esim, and more. learn more..."),
+              ),
+              CupertinoListTile(
+                leading: Icon(CupertinoIcons.phone, size: 32),
+                title: Text("Cellular Data"),
+                trailing: CupertinoSwitch(
+                  value: isCellularDataEnabled,
+                  onChanged: (bool value) {
+                    setState(() {
+                      isCellularDataEnabled = value;
+                    });
+                  },
+                ),
+              ),
+              CupertinoListTile(
+                title: Text("Data Usage"),
+                trailing: Text(
+                  "2.5 GB",
+                  style: TextStyle(color: CupertinoColors.inactiveGray),
+                ),
+              ),
+              CupertinoListTile(
+                title: Text("Data Roaming"),
+                trailing: CupertinoSwitch(
+                  value: isDataRoamingEnabled,
+                  onChanged: (bool value) {
+                    setState(() {
+                      isDataRoamingEnabled = value;
+                    });
+                  },
+                ),
+              ),
+              CupertinoListTile(
+                title: Text("Network Selection"),
+                trailing: Text(
+                  "Automatic",
+                  style: TextStyle(color: CupertinoColors.inactiveGray),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+
