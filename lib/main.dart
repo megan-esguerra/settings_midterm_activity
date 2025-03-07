@@ -26,7 +26,62 @@ class SettingsPage extends StatelessWidget {
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
         title: const Text('DevOps Teams'),
-        message: const Text('Information about DevOps Teams.'),
+        message: Column(
+          mainAxisSize: MainAxisSize.min, // Avoids excessive spacing
+          children: [
+            const Text('Information about DevOps Teams.'),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ClipOval(
+                  child: Image.asset(
+                    "assets/images/LuisAvatar.jpg",
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 5), // Space between images
+                ClipOval(
+                  child: Image.asset(
+                    "assets/images/AdrianAvatar.jpg",
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 5),
+                ClipOval(
+                  child: Image.asset(
+                    "assets/images/KristelAvatar.png",
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 5),
+                ClipOval(
+                  child: Image.asset(
+                    "assets/images/MeganAvatar.jpg",
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 5),
+                ClipOval(
+                  child: Image.asset(
+                    "assets/images/JohnnIvanAvatar.jpg",
+                    width: 50,
+                    height: 50,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
         actions: <CupertinoActionSheetAction>[
           CupertinoActionSheetAction(
             child: const Text('Close'),
