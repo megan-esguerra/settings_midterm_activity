@@ -128,12 +128,11 @@ class _SettingsPageState extends State<SettingsPage> {
               placeholder: 'Search',
             ),
           ),
-          Container(
-            color: CupertinoColors.darkBackgroundGray,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              children: [
-                const CircleAvatar(
+          CupertinoListSection.insetGrouped(
+            children: [
+              CupertinoListTile(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                leading: const CircleAvatar(
                   radius: 30,
                   backgroundColor: CupertinoColors.systemGrey5,
                   child: Icon(
@@ -141,36 +140,38 @@ class _SettingsPageState extends State<SettingsPage> {
                     color: CupertinoColors.black,
                   ),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        "Megan Esguerra",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Megan Esguerra",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(height: 2),
-                      Text(
-                        "Apple Account, iCloud, and more",
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: CupertinoColors.inactiveGray,
-                        ),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      "Apple Account, iCloud, and more",
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: CupertinoColors.inactiveGray,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                const Icon(
+                trailing: const Icon(
                   CupertinoIcons.forward,
                   color: CupertinoColors.inactiveGray,
                 ),
-              ],
-            ),
+                onTap: () {
+                  // Add navigation or action if needed
+                },
+              ),
+            ],
           ),
+
 
           CupertinoListSection.insetGrouped(
             children: [
