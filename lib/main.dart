@@ -60,7 +60,10 @@ class _SettingsPageState extends State<SettingsPage> {
           );
         }).toList(),
         cancelButton: CupertinoActionSheetAction(
-          child: const Text('Cancel'),
+          child: const Text(
+            'Cancel',
+            style: TextStyle(color: CupertinoColors.destructiveRed),
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -166,6 +169,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
           CupertinoListSection.insetGrouped(
+            margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             children: [
               CupertinoListTile(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -207,6 +211,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
 
           CupertinoListSection.insetGrouped(
+            margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
             children: [
               CupertinoListTile(
                 leading: Icon(
@@ -220,6 +225,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
 
           CupertinoListSection.insetGrouped(
+            margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.0),
             children: [
               CupertinoListTile(
                 leading: Icon(
@@ -232,8 +238,9 @@ class _SettingsPageState extends State<SettingsPage> {
             ],
           ),
 
-          const SizedBox(height: 10),
+
           CupertinoListSection.insetGrouped(
+            margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 7.0),
             children: [
               CupertinoListTile(
                 leading: Icon(
