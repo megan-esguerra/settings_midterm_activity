@@ -35,7 +35,7 @@ class _SettingsPageState extends State<SettingsPage> {
   final List<Map<String, String>> accounts = [
     {"name": "Megan Esguerra", "email": "megan@example.com", "avatar": "assets/images/MeganAvatar.jpg"},
     {"name": "Luis Gabrielle Estacio", "email": "luis@example.com", "avatar": "assets/images/LuisAvatar.jpg"},
-    {"name": "Adrian Mhaki E. Macabali", "email": "adrian@example.com", "avatar": "assets/images/AdrianAvatar.jpg"},
+    {"name": "Adrian Mhaki  Macabali", "email": "adrian@example.com", "avatar": "assets/images/AdrianAvatar.jpg"},
     {"name": "Kristel Culala", "email": "kristel@example.com", "avatar": "assets/images/KristelAvatar.png"},
     {"name": "John Ivan Baligod", "email": "john@example.com", "avatar": "assets/images/JohnnIvanAvatar.jpg"},
   ];
