@@ -703,20 +703,23 @@ class _CellularSettingsPageState extends State<CellularSettingsPage> {
             children: [
               CupertinoListTile(
                 leading: Icon(CupertinoIcons.antenna_radiowaves_left_right, size: 32),
-                title: RichText(
-                  text: TextSpan(
-                    text: "Find out how much data you're using, set data restriction, manage carrier settings such as esim, and more. ",
-                    style: TextStyle(
-                      color: isDarkMode ? CupertinoColors.white : CupertinoColors.black,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: "learn more...",
-                        style: TextStyle(
-                          color: CupertinoColors.activeBlue,
-                        ),
+                title: Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: RichText(
+                    text: TextSpan(
+                      text: "Find out how much data you're using, set data restriction, manage carrier settings such as esim, and more. ",
+                      style: TextStyle(
+                        color: isDarkMode ? CupertinoColors.white : CupertinoColors.black,
                       ),
-                    ],
+                      children: [
+                        TextSpan(
+                          text: "learn more...",
+                          style: TextStyle(
+                            color: CupertinoColors.activeBlue,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
