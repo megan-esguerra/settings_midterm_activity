@@ -26,10 +26,48 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool airplaneMode = false;
-  bool isWifiEnabled = false; // Initially off
-  bool isBluetoothEnabled = false; // Initially off
+  bool isWifiEnabled = false;
+  bool isBluetoothEnabled = false;
   String? connectedWifiNetwork;
   String? connectedBluetoothDevice;
+
+  // List of accounts with avatars
+  final List<Map<String, String>> accounts = [
+    {"name": "Megan Esguerra", "email": "megan@example.com", "avatar": "assets/images/MeganAvatar.jpg"},
+    {"name": "Luis Gabrielle Estacio", "email": "luis@example.com", "avatar": "assets/images/LuisAvatar.jpg"},
+    {"name": "Adrian Mhaki E. Macabali", "email": "adrian@example.com", "avatar": "assets/images/AdrianAvatar.jpg"},
+    {"name": "Kristel Culala", "email": "kristel@example.com", "avatar": "assets/images/KristelAvatar.png"},
+    {"name": "John Ivan Baligod", "email": "john@example.com", "avatar": "assets/images/JohnnIvanAvatar.jpg"},
+  ];
+
+  String selectedAccount = "Megan Esguerra"; // Default selected account
+
+  void _showAccountSelectionModal(BuildContext context) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: const Text('Select Account'),
+        message: const Text('Choose an account to switch to'),
+        actions: accounts.map((account) {
+          return CupertinoActionSheetAction(
+            child: Text(account["name"]!),
+            onPressed: () {
+              setState(() {
+                selectedAccount = account["name"]!;
+              });
+              Navigator.pop(context);
+            },
+          );
+        }).toList(),
+        cancelButton: CupertinoActionSheetAction(
+          child: const Text('Cancel'),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    );
+  }
 
   void _showDevOpsModal(BuildContext context) {
     showCupertinoModalPopup(
@@ -45,13 +83,13 @@ class _SettingsPageState extends State<SettingsPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildAvatar("assets/images/LuisAvatar.jpg", "Luis  "),
-                const SizedBox(width: 10), // Add this line
+                const SizedBox(width: 10),
                 _buildAvatar("assets/images/AdrianAvatar.jpg", "Adrian  "),
-                const SizedBox(width: 10), // Add this line
+                const SizedBox(width: 10),
                 _buildAvatar("assets/images/KristelAvatar.png", "Kristel "),
-                const SizedBox(width: 10), // Add this line
+                const SizedBox(width: 10),
                 _buildAvatar("assets/images/MeganAvatar.jpg", "Megan "),
-                const SizedBox(width: 10), // Add this line
+                const SizedBox(width: 10),
                 _buildAvatar("assets/images/JohnnIvanAvatar.jpg", "JohnIvan "),
               ],
             ),
@@ -69,7 +107,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  /// Helper Widget to Create Avatar with Name
   Widget _buildAvatar(String imagePath, String name) {
     return Column(
       children: [
@@ -94,22 +131,22 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {
       airplaneMode = value;
       if (airplaneMode) {
-        // Turn off Wi-Fi and Bluetooth when Airplane Mode is turned on
         isWifiEnabled = false;
         isBluetoothEnabled = false;
         connectedWifiNetwork = null;
         connectedBluetoothDevice = null;
       } else {
-        // When Airplane Mode is turned off, set Wi-Fi and Bluetooth to "Not Connected"
         connectedWifiNetwork = null;
         connectedBluetoothDevice = null;
-
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    // Find the selected account's avatar
+    String selectedAvatar = accounts.firstWhere((account) => account["name"] == selectedAccount)["avatar"]!;
+
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         leading: Text('Settings', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
@@ -132,20 +169,17 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               CupertinoListTile(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                leading: const CircleAvatar(
+                leading: CircleAvatar(
                   radius: 30,
                   backgroundColor: CupertinoColors.systemGrey5,
-                  child: Icon(
-                    CupertinoIcons.person,
-                    color: CupertinoColors.black,
-                  ),
+                  backgroundImage: AssetImage(selectedAvatar),
                 ),
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Megan Esguerra",
+                      selectedAccount,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -166,12 +200,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   color: CupertinoColors.inactiveGray,
                 ),
                 onTap: () {
-                  // Add navigation or action if needed
+                  _showAccountSelectionModal(context);
                 },
               ),
             ],
           ),
-
 
           CupertinoListSection.insetGrouped(
             children: [
@@ -198,6 +231,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ],
           ),
+
           const SizedBox(height: 10),
           CupertinoListSection.insetGrouped(
             children: [
